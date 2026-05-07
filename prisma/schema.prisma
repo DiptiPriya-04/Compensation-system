@@ -1,0 +1,44 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Company {
+  companyUuid String         @id @default(uuid())
+  name        String         @unique
+  slug        String         @unique
+  levels      LevelMapping[]
+  salaries    SalaryRecord[]
+}
+
+model LevelMapping {
+  mappingUuid   String   @id @default(uuid())
+  companyUuid   String
+  companyLevel  String   // e.g., "L4", "SDE II"
+  standardRank  Int      // 1-10 scale
+  
+  company       Company  @relation(fields: [companyUuid], references: [companyUuid])
+  
+  @@unique([companyUuid, companyLevel])
+}
+
+model SalaryRecord {
+  salaryUuid      String   @id @default(uuid())
+  role            String
+  location        String
+  baseSalary      Float
+  stockGrant      Float    @default(0)
+  bonus           Float    @default(0)
+  totalComp       Float
+  yoeTotal        Float
+  companyLevel    String
+  confidenceScore Int      @default(100)
+  
+  companyUuid     String
+  company         Company  @relation(fields: [companyUuid], references: [companyUuid])
+  
+  createdAt       DateTime @default(now())
+}
