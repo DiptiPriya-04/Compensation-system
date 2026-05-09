@@ -1,8 +1,8 @@
-export const dynamic = 'force-dynamic';
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getStandardizedLevel } from '@/lib/utils';
 
+export const dynamic = 'force-dynamic';
 export async function POST(request) {
   try {
     const body = await request.json();
